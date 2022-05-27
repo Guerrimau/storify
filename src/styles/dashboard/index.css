@@ -1,0 +1,89 @@
+.sidebar {
+    background-color: var(--primary-color);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-content: flex-start;
+    align-items: flex-start;
+    padding: 50px;
+}
+
+.sidebar > h3 {
+    cursor: pointer;
+}
+
+.sidebar > a:last-child {
+    margin-top: auto;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 40px;
+    padding: 50px;
+}
+
+.card {
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    border-radius: 15px;
+    padding: 10px 30px;
+}
+
+.home__dates {
+    grid-column: 2 / 3;
+    grid-row: 1 / 3;
+}
+
+.home__messages--list {
+    overflow-y: scroll;
+    height: 73%;
+}
+
+.message-item {
+    display: flex;
+}
+
+.message-item__picture {
+    height: 50px;
+    width: 50px;
+    background-color: slateblue;
+    border-radius: 25px;
+    margin-right: 20px;
+}
+
+.message-item__name, .message-item__text {
+    margin: 0;
+}
+
+.message-item__text {
+    color: gray;
+}
+
+.home__patients--list {
+    overflow-y: scroll;
+    height: 73%;
+}
+
+.patient-item {
+    display: flex;
+    align-items: center;
+}
+
+.patient-item__picture {
+    height: 50px;
+    width: 50px;
+    background-color: slateblue;
+    border-radius: 25px;
+    margin-right: 20px;
+}
