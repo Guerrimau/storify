@@ -73,19 +73,19 @@
   }
 }
 
-* {
+.container * {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
 }
 
-html,
-body {
+.html,
+.body {
   max-width: 100vw;
   overflow-x: hidden;
 }
 
-body {
+.body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
       to bottom,
@@ -95,13 +95,13 @@ body {
     rgb(var(--background-start-rgb));
 }
 
-a {
+.a {
   color: inherit;
   text-decoration: none;
 }
 
 @media (prefers-color-scheme: dark) {
-  html {
+  .html {
     color-scheme: dark;
   }
 }
