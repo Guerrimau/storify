@@ -1,5 +1,5 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import { DashboardLayout } from "@/components";
+import { Typography } from "@mui/joy";
 
 export default function Home() {
   return (
