@@ -3,8 +3,8 @@ import { Typography } from "@mui/joy";
 
 export default function Home() {
   return (
-    <DashboardLayout>
-      <Typography>Home</Typography>
-    </DashboardLayout>
+    <main className={styles.main}>
+      
+    </main>
   );
 }
