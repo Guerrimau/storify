@@ -6,14 +6,20 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:migrate": "npx drizzle-kit push",
+    "db:studio": "npx drizzle-kit studio --port 5555 --verbose"
   },
   "dependencies": {
-    "@supabase/ssr": "^0.4.0",
-    "dotenv": "^16.4.5",
+    "@emotion/react": "^11.13.0",
+    "@emotion/styled": "^11.13.0",
+    "@fontsource/inter": "^5.0.19",
+    "@mui/icons-material": "^5.16.4",
+    "@mui/joy": "^5.0.0-beta.36",
+    "@next/env": "^14.2.5",
+    "@vercel/postgres": "^0.9.0",
     "drizzle-orm": "^0.32.0",
     "next": "14.2.4",
-    "postgres": "^3.4.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
