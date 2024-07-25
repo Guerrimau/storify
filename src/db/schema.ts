@@ -1,6 +1,3 @@
-
-import { time } from 'console';
-import { int } from 'drizzle-orm/mysql-core';
 import { integer, varchar, pgTable, serial, text, boolean, timestamp, numeric } from 'drizzle-orm/pg-core';
 
 export const UsersTable = pgTable('UsersTable',{
