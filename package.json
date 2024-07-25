@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:migrate": "npx drizzle-kit push",
+    "db:studio": "npx drizzle-kit studio --port 5555 --verbose"
   },
   "dependencies": {
     "@emotion/react": "^11.13.0",
