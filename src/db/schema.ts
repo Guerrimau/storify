@@ -1,108 +1,101 @@
-import { drizzle } from 'drizzle-orm/vercel-postgres';
-import { sql } from "@vercel/postgres";
-
 import {
-    boolean,
-    integer,
-    numeric,
-    pgTable,
-    serial,
-    text,
-    timestamp,
-    varchar,
-} from 'drizzle-orm/pg-core';
+  boolean,
+  integer,
+  real,
+  pgEnum,
+  pgTable,
+  serial,
+  text,
+  varchar,
+  date,
+} from "drizzle-orm/pg-core";
+import { relations } from "drizzle-orm";
 
-// Use this object to send drizzle queries to your DB
-export const db = drizzle(sql);
+export const clients = pgTable("clients", {
+  id: serial("id").primaryKey(),
+  firstName: text("first_name").notNull(),
+  lastName: text("last_name").notNull(),
+  email: text("email").notNull(),
+  phone: varchar("phone").notNull().unique(),
+  address: text("address").notNull(),
+});
 
-export const UsersTable = pgTable(
-    'UsersTable',
-    {
-        id: serial('id').primaryKey(),
-        name: text('name').notNull(),
-        address: text('address').notNull(),
-        celular: varchar('phone', { length: 15 }).notNull(),
-        email: text('email').notNull().unique(),
-        address_details: text('address_details').notNull(),
-        company_name: text('company_name').notNull(),
-        role: boolean('role').notNull(),
-    });
+export const clientsRelations = relations(clients, ({ many }) => ({
+  orders: many(orders),
+}));
 
-export const OrderTable = pgTable(
-    'OrderTable',
-    {
-        id: serial('id').primaryKey(),
-        client_id: integer('client_id').notNull()
-            .references(() => UsersTable.id, { onDelete: 'cascade' }),
-        delivery_date: timestamp('delivery_date').notNull().defaultNow(),
-        total: numeric('total').notNull(),
-        status: timestamp('status').notNull().defaultNow()
-            .$onUpdate(() => new Date()),
-        paid: boolean('paid').notNull().default(false),
-    });
+export const userRoles = pgEnum("role", ["EMPLOYEE", "ADMIN"]);
 
-export const OrderItemTable = pgTable(
-    'OrderItemTable',
-    {
-        id: serial('id').primaryKey(),
-        order_id: integer('order_id').notNull()
-            .references(() => OrderTable.id, { onDelete: 'cascade' }),
-        item_id: integer('item_id').notNull()
-            .references(() => ProductTable.id, { onDelete: 'cascade' }),
-        price: numeric('price').notNull(),
-        unit: varchar('unit', { length: 10 }).notNull(),
-        quality: numeric('quality').notNull(),
-        price_per_unit: numeric('price_per_unit').notNull(),
-        total_price: numeric('total_price').notNull(),
-        amount: numeric('amount').notNull(),
-    });
+export const users = pgTable("users", {
+  id: serial("id").primaryKey(),
+  firstName: text("first_name").notNull(),
+  lastName: text("last_name").notNull(),
+  email: text("email").notNull(),
+  phone: varchar("phone").notNull().unique(),
+  role: userRoles("role").notNull(),
+});
 
-export const ProductTable = pgTable(
-    'ProductTable',
-    {
-        id: serial('id').primaryKey(),
-        name: text('name').notNull(),
-        initial_price: numeric('price').notNull(),
-        stock: numeric('stock').notNull(),
-        description: text('description').notNull(),
-        image: text('image').notNull(),
-    });
+export const products = pgTable("products", {
+  id: serial("id").primaryKey(),
+  image: text("image").notNull(),
+  name: text("name").notNull(),
+  description: text("description").notNull(),
+  initialPrice: real("initial_price").notNull(),
+});
 
-export const ProductCategoryTable = pgTable(
-    'ProductCategoryTable',
-    {
-        id: serial('id').primaryKey(),
-        name: text('name').notNull(),
-        description: text('description').notNull(),
-    });
+export const orders = pgTable("orders", {
+  id: serial("id").primaryKey(),
+  totalPrice: real("total_price").notNull(),
+  address: text("address").notNull(),
+  status: text("status").notNull(),
+  paid: boolean("paid").notNull().default(false),
+  deliveryDate: date("delivery_date").notNull(),
+  clientId: integer("client_id").notNull(),
+});
 
-export const ProviderTable = pgTable(
-    'ProviderTable',
-    {
-        id: serial('id').primaryKey(),
-        name: text('name').notNull(),
-        phone: varchar('phone', { length: 15 }).notNull(),
-        email: text('email').notNull().unique(),
-        address: text('address').notNull(),
-        address_details: text('address_details').notNull(),
-        company_name: text('company_name').notNull(),
-        role: boolean('role').notNull(),
-    });
+export const ordersRelations = relations(orders, ({ one, many }) => ({
+  client: one(clients, {
+    fields: [orders.clientId],
+    references: [clients.id],
+  }),
+  items: many(orderItems),
+}));
 
-export type InsertUser = typeof UsersTable.$inferInsert;
-export type SelectUser = typeof UsersTable.$inferSelect;
+export const orderItems = pgTable("order_items", {
+  id: serial("id").primaryKey(),
+  units: real("units").notNull(),
+  pricePerUnit: real("price_per_unit").notNull(),
+  totalPrice: real("total_price").notNull(),
+  unitType: varchar("unit_type").notNull(),
+  orderId: integer("order_id").notNull(),
+  productId: integer("product_id").notNull(),
+});
 
-export type InsertOrder = typeof OrderTable.$inferInsert;
-export type SelectOrder = typeof OrderTable.$inferSelect;
+export const orderItemsRelations = relations(orderItems, ({ one }) => ({
+  order: one(orders, {
+    fields: [orderItems.orderId],
+    references: [orders.id],
+  }),
+  product: one(products, {
+    fields: [orderItems.productId],
+    references: [products.id],
+  }),
+}));
 
-export type InsertOrderItem = typeof OrderItemTable.$inferInsert;
-export type SelectOrderItem = typeof OrderItemTable.$inferSelect;
+export const providers = pgTable("providers", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  phone: varchar("phone").notNull(),
+  email: text("email").notNull(),
+  address: text("address").notNull(),
+});
 
-export type InsertProduct = typeof ProductTable.$inferInsert;
-export type SelectProduct = typeof ProductTable.$inferSelect;
+export const providersRelations = relations(providers, ({ many }) => ({
+  products: many(products),
+}));
 
-export type InsertProductCategory = typeof ProductCategoryTable.$inferInsert;
-export type SelectProductCategory = typeof ProductCategoryTable.$inferSelect;
+export type OrderDB = typeof orders.$inferSelect;
+export type NewOrderDB = typeof orders.$inferInsert;
 
-export type InsertProvider = typeof ProviderTable.$inferInsert;
-export type SelectProvider = typeof ProviderTable.$inferSelect;
+export type OrderItemDB = typeof orderItems.$inferSelect;
+export type NewOrderItemDB = typeof orderItems.$inferInsert;
