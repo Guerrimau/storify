@@ -18,7 +18,6 @@ const getAll = async () => {
 
     return productsResponse;
   } catch (error) {
-    console.log(error);
     throw new Error("Error al obtener los productos");
   }
 };
@@ -33,7 +32,6 @@ const create = async (product: NewProduct) => {
 
     return productResponse[0];
   } catch (error) {
-    console.log(error);
     throw new Error("Error al crear el producto");
   }
 };
