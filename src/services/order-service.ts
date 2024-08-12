@@ -1,16 +1,19 @@
 import db from "@/db";
-import { orders, orderItems, NewOrderDB, OrderDB, NewOrderItemDB } from "@/db/schema";
+import { orders, orderItems, NewOrderDB, NewOrderItemDB } from "@/db/schema";
 import { clientService } from "@/services";
 import { ICreate } from "./interfaces/client-service-interface";
 
-
 const create: ICreate = async (newOrder) => {
-  try {
-    if (!newOrder.userPhone) {
-      throw new Error("El número de teléfono es requerido");
-    }
-    const client = await clientService.getByPhoneNumber(newOrder.userPhone);
+  if (!newOrder.userPhone) {
+    throw new Error("El número de teléfono es requerido");
+  }
+  const client = await clientService.getByPhoneNumber(newOrder.userPhone);
 
+  if (!client) {
+    throw new Error("El cliente no existe");
+  }
+
+  try {
     const orderBody: NewOrderDB = {
       status: "PENDING",
       paid: newOrder.paid,
@@ -46,6 +49,7 @@ const create: ICreate = async (newOrder) => {
 
     return response;
   } catch (error) {
+    console.log(error);
     throw new Error("Error al crear la orden");
   }
 };
