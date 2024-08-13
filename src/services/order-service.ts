@@ -1,9 +1,9 @@
 import db from "@/db";
 import { orders, orderItems, NewOrderDB, NewOrderItemDB } from "@/db/schema";
 import { clientService } from "@/services";
-import { ICreate } from "./interfaces/client-service-interface";
+import { ICreateOrder } from "./interfaces/order-service-interface";
 
-const create: ICreate = async (newOrder) => {
+const create: ICreateOrder = async (newOrder) => {
   if (!newOrder.userPhone) {
     throw new Error("El número de teléfono es requerido");
   }
@@ -16,11 +16,11 @@ const create: ICreate = async (newOrder) => {
   try {
     const orderBody: NewOrderDB = {
       status: "PENDING",
-      paid: newOrder.paid,
-      deliveryDate: newOrder.deliveryDate,
+      paid: false,
+      deliveryDate: new Date().toISOString(),
+      totalPrice: 0,
       clientId: client.id,
-      totalPrice: newOrder.totalPrice,
-      address: newOrder.address,
+      address: client.address,
     };
 
     const [orderResponse] = await db
@@ -29,12 +29,12 @@ const create: ICreate = async (newOrder) => {
       .returning();
 
     const orderItemsBody = newOrder.orderItems.map((item) => ({
+      pricePerUnit: 0,
+      totalPrice: 0,
       orderId: orderResponse.id,
       productId: item.productId,
-      units: item.units,
-      pricePerUnit: 0,
-      totalPrice: item.units * item.pricePerUnit,
       unitType: item.unitType,
+      units: item.units,
     })) as NewOrderItemDB[];
 
     const orderItemsResponse = await db

@@ -1,22 +1,18 @@
-POST http://localhost:3001/api/chatbot/order HTTP/1.1
-Content-Type: application/json
+POST http://localhost:3000/api/chatbot/order HTTP/1.1
+content-type: application/json
+
 {
-  userPhone: 1234567890,
-  paid: true,
-  address: "123 Fake Street, Faketown, FK 12345",
-  totalPrice: 99.99,
-  orderItems: [
+  "userPhone": 1234567890,
+  "orderItems": [
     {
-      productId: 1,
-      units: 2,
-      pricePerUnit: 25.00,
-      unitType: "piece"
+      "productId": 1,
+      "units": 2,
+      "unitType": "KG"
     },
     {
-      productId: 2,
-      units: 1,
-      pricePerUnit: 49.99,
-      unitType: "piece"
+      "productId": 2,
+      "units": 1,
+      "unitType": "PZ"
     }
   ]
 }

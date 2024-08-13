@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { orderService } from "@/services";
-import { INewOrder } from "@/services/interfaces/client-service-interface";
+import { INewOrder } from "@/services/interfaces/order-service-interface";
+
+interface IPostBody extends INewOrder {}
 
 export const POST = async (req: NextRequest, res: NextResponse) => {
   try {
-    const body = (await req.json()) as INewOrder;
+    const body = (await req.json()) as IPostBody;
     const createdOrder = await orderService.create(body);
     return NextResponse.json({
       message: "Pedido creado correctamente",
@@ -12,7 +14,6 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
       data: createdOrder,
     });
   } catch (error: any) {
-    console.log(error.message!);
     return NextResponse.json({
       message: "Error al crear el pedido",
       success: false,

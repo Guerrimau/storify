@@ -90,12 +90,11 @@ export const providers = pgTable("providers", {
   address: text("address").notNull(),
 });
 
-export const providersRelations = relations(providers, ({ many }) => ({
-  products: many(products),
-}));
-
 export type OrderDB = typeof orders.$inferSelect;
 export type NewOrderDB = typeof orders.$inferInsert;
 
 export type OrderItemDB = typeof orderItems.$inferSelect;
 export type NewOrderItemDB = typeof orderItems.$inferInsert;
+
+export type UserDB = typeof clients.$inferSelect;
+export type NewUserDB = typeof clients.$inferInsert;

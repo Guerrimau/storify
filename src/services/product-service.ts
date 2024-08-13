@@ -5,17 +5,7 @@ type NewProduct = typeof products.$inferInsert;
 
 const getAll = async () => {
   try {
-    // Validate User Credentials
-    const productsResponse = await db.query.products.findFirst({
-      with: {
-        category: {
-          columns: {
-            type: true,
-          },
-        },
-      },
-    });
-
+    const productsResponse = await db.query.products.findMany();
     return productsResponse;
   } catch (error) {
     throw new Error("Error al obtener los productos");

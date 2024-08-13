@@ -1,11 +1,7 @@
 import db from "@/db";
-import { clients } from "@/db/schema";
+import { IGetUserByPhoneNumber } from "./interfaces/client-service-interface";
 
-type UserDB = typeof clients.$inferSelect;
-
-type IGetByPhoneNumber = (phone: number) => Promise<UserDB>;
-
-const getByPhoneNumber: IGetByPhoneNumber = async (number: number) => {
+const getByPhoneNumber: IGetUserByPhoneNumber = async (number) => {
   try {
     const userResponse = await db.query.clients.findFirst({
       where: (table, funcs) => funcs.eq(table.phone, number.toString()),
