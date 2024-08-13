@@ -1,1 +1,1 @@
-export * from './Client';
+type OrderStatus = "PENDING" | "IN_PROGRESS" | "DELIVERED" | "CANCELED";
