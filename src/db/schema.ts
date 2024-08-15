@@ -101,3 +101,6 @@ export type NewUserDB = typeof clients.$inferInsert;
 
 export type ClientDB = typeof clients.$inferSelect;
 export type NewClientDB = typeof clients.$inferInsert;
+
+export type ProductDB = typeof products.$inferSelect;
+export type NewProductDB = typeof products.$inferInsert;
