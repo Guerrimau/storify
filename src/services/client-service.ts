@@ -1,7 +1,7 @@
 import db from "@/db";
-import { IGetUserByPhoneNumber } from "./interfaces/client-service-interface";
+import { IGetClientByPhoneNumber } from "@/types/services/client-service-interface";
 
-const getByPhoneNumber: IGetUserByPhoneNumber = async (number) => {
+const getClientByPhoneNumber: IGetClientByPhoneNumber = async (number) => {
   try {
     const userResponse = await db.query.clients.findFirst({
       where: (table, funcs) => funcs.eq(table.phone, number.toString()),
@@ -18,7 +18,7 @@ const getByPhoneNumber: IGetUserByPhoneNumber = async (number) => {
 };
 
 const clientService = {
-  getByPhoneNumber,
+  getByPhoneNumber: getClientByPhoneNumber,
 };
 
 export default clientService;

@@ -1,9 +1,9 @@
 import db from "@/db";
 import { orders, orderItems, NewOrderDB, NewOrderItemDB } from "@/db/schema";
 import { clientService } from "@/services";
-import { ICreateOrder } from "./interfaces/order-service-interface";
+import { ICreateOrder } from "@/types/services/order-service-interface";
 
-const create: ICreateOrder = async (newOrder) => {
+const createOrder: ICreateOrder = async (newOrder) => {
   if (!newOrder.userPhone) {
     throw new Error("El número de teléfono es requerido");
   }
@@ -55,7 +55,7 @@ const create: ICreateOrder = async (newOrder) => {
 };
 
 const ordersService = {
-  create,
+  create: createOrder,
 };
 
 export default ordersService;

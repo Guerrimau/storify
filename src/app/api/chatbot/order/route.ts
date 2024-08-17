@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { orderService } from "@/services";
-import { INewOrder } from "@/services/interfaces/order-service-interface";
+import { INewOrder } from "@/types/services/order-service-interface";
 
 interface IPostBody extends INewOrder {}
 
