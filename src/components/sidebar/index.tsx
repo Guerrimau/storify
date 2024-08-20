@@ -16,12 +16,11 @@ import GroupRoundedIcon from "@mui/icons-material/GroupRounded";
 import SupportRoundedIcon from "@mui/icons-material/SupportRounded";
 import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
-import BreakfastDiningIcon from '@mui/icons-material/BreakfastDining';
-import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
+import BreakfastDiningIcon from "@mui/icons-material/BreakfastDining";
+import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import { useRouter, usePathname } from "next/navigation";
 import ColorSchemeToggle from "../color-scheme-toggle";
 import { closeSidebar } from "@/utils/sidebar-toggle-functions";
-
 
 function Toggler({
   defaultExpanded = false,
@@ -110,7 +109,14 @@ export default function Sidebar() {
         }}
         onClick={() => closeSidebar()}
       />
-      <Box sx={{ display: "flex", flexDirection: "column", gap: 1, alignItems: "center" }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 1,
+          alignItems: "center",
+        }}
+      >
         <Avatar
           onClick={() => router.push("/")}
           sx={{
@@ -190,8 +196,8 @@ export default function Sidebar() {
             <ListItemButton
               role="menuitem"
               component="a"
-              href="/profile"
-              selected={pathname == "/profile"}
+              href="/clientes"
+              selected={pathname == "/clientes"}
             >
               <GroupRoundedIcon />
               <ListItemContent>
