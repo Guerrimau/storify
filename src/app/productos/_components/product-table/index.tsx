@@ -33,9 +33,9 @@ export default function ProductTable({ products }: IProps) {
         <FormLabel>Categoría</FormLabel>
         <Select size="sm" placeholder="Todas">
           <Option value="all">Todas</Option>
-          <Option value="electronics">Electrónica</Option>
-          <Option value="clothing">Ropa</Option>
-          <Option value="books">Libros</Option>
+          <Option value="fruits">Frutas</Option>
+          <Option value="vegetables">Verduras</Option>
+          <Option value="miscellaneous">Extras</Option>
         </Select>
       </FormControl>
       <FormControl size="sm">
@@ -157,8 +157,8 @@ export default function ProductTable({ products }: IProps) {
                         event.target.checked
                           ? ids.concat(String(product.id))
                           : ids.filter(
-                              (itemId) => itemId !== String(product.id)
-                            )
+                            (itemId) => itemId !== String(product.id)
+                          )
                       );
                     }}
                   />

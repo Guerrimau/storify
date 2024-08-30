@@ -104,3 +104,4 @@ export type NewClientDB = typeof clients.$inferInsert;
 
 export type ProductDB = typeof products.$inferSelect;
 export type NewProductDB = typeof products.$inferInsert;
+export type UpdateProductDB = Omit<ProductDB, 'id'>;

@@ -1,5 +1,5 @@
 import db from "@/db";
-import { NewProductDB, ProductDB, products } from "@/db/schema";
+import { NewProductDB, UpdateProductDB, ProductDB, products } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
 const getAllProducts = async () => {
@@ -39,12 +39,12 @@ const createProduct = async (product: Partial<NewProductDB>) => {
   }
 };
 
-const updateProduct = async (id: number, product: Partial<NewProductDB>) => {
+const updateProduct = async (id: number, product: Partial<UpdateProductDB>) => {
   if (!id) {
     throw new Error("El id es requerido");
   }
 
-  let productToUpdate: Partial<NewProductDB> = {};
+  let productToUpdate: Partial<UpdateProductDB> = {};
 
   const propertiesToUpdate = [
     "name",
