@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DashboardLayout } from "@/components";
 import {
   Button,
@@ -13,10 +13,13 @@ import {
 } from "@mui/joy";
 import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
 
-import { updateProductAction } from "./actions";
+import { getProductAction, updateProductAction } from "./actions";
 import { UpdateProductDB } from "@/db/schema";
+import { useParams } from "next/navigation";
 
 export default function ActualizarProductoPage() {
+  const { id } = useParams();
+
   const [formValues, setFormValues] = useState<UpdateProductDB>({
     name: "",
     initialPrice: 0,
@@ -25,10 +28,31 @@ export default function ActualizarProductoPage() {
   });
   const [loading, setLoading] = useState(false);
 
+  const onFormChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setFormValues({ ...formValues, [event.target.name]: event.target.value });
+  };
+
   const onSubmit = async () => {
     setLoading(true);
-    await updateProductAction(formValues.id!, formValues);
-  }
+    try {
+      await updateProductAction(Number(id), formValues);
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getData = async () => {
+    const product = await getProductAction(Number(id));
+    if (!product) return;
+    setFormValues(product);
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   return (
     <DashboardLayout>
@@ -49,7 +73,7 @@ export default function ActualizarProductoPage() {
         <Input
           name="name"
           value={formValues.name}
-          onChange={(e) => setFormValues({ ...formValues, name: e.target.value })}
+          onChange={onFormChange}
           placeholder="Nombre del producto"
         />
         <FormLabel>Descripcion</FormLabel>
@@ -57,7 +81,7 @@ export default function ActualizarProductoPage() {
           minRows={2}
           name="description"
           value={formValues.description}
-          onChange={(e) => setFormValues({ ...formValues, description: e.target.value })}
+          onChange={onFormChange}
           placeholder="Descripcion del producto"
         />
         <FormLabel>Precio</FormLabel>
@@ -66,7 +90,7 @@ export default function ActualizarProductoPage() {
           name="initialPrice"
           type="number"
           value={formValues.initialPrice}
-          onChange={(e) => setFormValues({ ...formValues, initialPrice: parseFloat(e.target.value) })}
+          onChange={onFormChange}
         />
         <Button loading={loading} onClick={onSubmit}>
           Actualizar

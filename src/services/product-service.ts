@@ -1,5 +1,10 @@
 import db from "@/db";
-import { NewProductDB, UpdateProductDB, ProductDB, products } from "@/db/schema";
+import {
+  NewProductDB,
+  UpdateProductDB,
+  ProductDB,
+  products,
+} from "@/db/schema";
 import { eq } from "drizzle-orm";
 
 const getAllProducts = async () => {
@@ -85,8 +90,29 @@ const removeProduct = async (id: number) => {
   }
 };
 
+const getProductById = async (id: number) => {
+  if (!id) {
+    throw new Error("El id es requerido");
+  }
+
+  try {
+    const product = await db.query.products.findFirst({
+      where: (table, funcs) => funcs.eq(table.id, id),
+    });
+
+    if (!product) {
+      throw new Error("Producto no encontrado");
+    }
+
+    return product;
+  } catch (error) {
+    throw new Error("Error al obtener el producto");
+  }
+};
+
 const productService = {
   getAll: getAllProducts,
+  getById: getProductById,
   create: createProduct,
   update: updateProduct,
   remove: removeProduct,
