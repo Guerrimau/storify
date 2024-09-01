@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Box from "@mui/joy/Box";
+import Button from "@mui/joy/Button";
 import Table from "@mui/joy/Table";
 import Typography from "@mui/joy/Typography";
 import Sheet from "@mui/joy/Sheet";
@@ -140,9 +141,8 @@ export default function ProductTable({ products }: IProps) {
                 </Link>
               </th>
               <th style={{ width: 300, padding: "12px 6px" }}>Descripción</th>
-              <th style={{ width: 150, padding: "12px 6px" }}>
-                Precio Inicial
-              </th>
+              <th style={{ width: 150, padding: "12px 6px" }}>Precio Inicial</th>
+              <th style={{ width: 150, padding: "12px 6px" }}>Accion</th>
             </tr>
           </thead>
           <tbody>
@@ -186,6 +186,11 @@ export default function ProductTable({ products }: IProps) {
                   <Typography level="body-sm">
                     ${product.initialPrice.toFixed(2)}
                   </Typography>
+                </td>
+                <td>
+                  <Link href={"./productos/editar/" + product.id}>
+                    <Button variant='soft'>Editar</Button>
+                  </Link>
                 </td>
               </tr>
             ))}
