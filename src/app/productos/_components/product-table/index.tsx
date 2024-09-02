@@ -1,24 +1,36 @@
 "use client";
 
 import * as React from "react";
-import Box from "@mui/joy/Box";
-import Button from "@mui/joy/Button";
-import Table from "@mui/joy/Table";
-import Typography from "@mui/joy/Typography";
-import Sheet from "@mui/joy/Sheet";
-import Checkbox from "@mui/joy/Checkbox";
-import FormControl from "@mui/joy/FormControl";
-import FormLabel from "@mui/joy/FormLabel";
-import Link from "@mui/joy/Link";
-import Input from "@mui/joy/Input";
-import Select from "@mui/joy/Select";
-import Option from "@mui/joy/Option";
-import Avatar from "@mui/joy/Avatar";
+import {
+  Avatar,
+  Box,
+  Button,
+  Checkbox,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  FormControl,
+  FormLabel,
+  Input,
+  Link,
+  Modal,
+  ModalDialog,
+  Option,
+  Sheet,
+  Select,
+  Table,
+  Typography
+} from "@mui/joy";
 
-import SearchIcon from "@mui/icons-material/Search";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import DeleteForever from '@mui/icons-material/DeleteForever';
+import EditIcon from '@mui/icons-material/Edit';
+import SearchIcon from "@mui/icons-material/Search";
+import WarningRoundedIcon from '@mui/icons-material/WarningRounded';
 
 import { ProductDB } from "@/db/schema";
+import { removeProductAction } from "../../eliminar/[id]/actions";
 
 interface IProps {
   products: ProductDB[];
@@ -27,6 +39,20 @@ interface IProps {
 export default function ProductTable({ products }: IProps) {
   const [order, setOrder] = React.useState<"asc" | "desc">("desc");
   const [selected, setSelected] = React.useState<readonly string[]>([]);
+  const [open, setOpen] = React.useState<boolean>(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  const confirmDelete = async () => {
+    try {
+      await removeProductAction(Number(selected[0]));
+    } catch (error) {
+
+    } finally {
+      setOpen(false);
+      console.log("Producto eliminado");
+    }
+  }
 
   const renderFilters = () => (
     <React.Fragment>
@@ -189,8 +215,43 @@ export default function ProductTable({ products }: IProps) {
                 </td>
                 <td>
                   <Link href={"./productos/editar/" + product.id}>
-                    <Button variant='soft'>Editar</Button>
+                    <Button variant='soft' startDecorator={<EditIcon />}>Editar</Button>
                   </Link>
+                  <Button
+                    variant="soft"
+                    color="danger"
+                    endDecorator={<DeleteForever />}
+                    onClick={() => setOpen(true)}>
+                    Eliminar
+                  </Button>
+                  <Modal open={open} onClose={handleClose}
+                    sx={
+                      {
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        backdropFilter: "blur(2px)",
+                      }
+                    }>
+                    <ModalDialog variant="outlined" role="alertdialog" layout="center">
+                      <DialogTitle>
+                        <WarningRoundedIcon />
+                        Confirmación
+                      </DialogTitle>
+                      <Divider />
+                      <DialogContent>
+                        ¿Estás seguro de que deseas eliminar este producto?
+                      </DialogContent>
+                      <DialogActions>
+                        <Button variant="solid" color="danger" onClick={confirmDelete}>
+                          Eliminar
+                        </Button>
+                        <Button variant="plain" color="neutral" onClick={handleClose}>
+                          Cancelar
+                        </Button>
+                      </DialogActions>
+                    </ModalDialog>
+                  </Modal>
                 </td>
               </tr>
             ))}
