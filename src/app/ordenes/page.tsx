@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { Box, Breadcrumbs, Link, Typography } from "@mui/joy";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
@@ -7,8 +5,11 @@ import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import { DashboardLayout } from "@/components";
 import { OrderTable } from "./_components";
 import { MOCK_ORDERS } from "@/MOCK/mock-orders";
+import { getProductsAction } from "./actions";
 
-export default function OrdenesPage() {
+export default async function OrdenesPage() {
+  const products = await getProductsAction();
+
   return (
     <DashboardLayout>
       <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -55,7 +56,7 @@ export default function OrdenesPage() {
           Ordenes
         </Typography>
       </Box>
-      <OrderTable orders={MOCK_ORDERS} />
+      <OrderTable avaialbleProducts={products} orders={MOCK_ORDERS} />
       {/* <OrderList /> */}
     </DashboardLayout>
   );

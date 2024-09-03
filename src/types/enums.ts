@@ -1,17 +1,17 @@
 export enum OrderStatus {
-  Pendiente = "PENDIENTE",
+  Nuevo = "NUEVO",
   Confirmado = "CONFIRMADO",
   Rechazado = "RECHAZADO",
-  EnProgreso = "EN_PROGRESO",
+  Progreso = "PROGRESO",
   Entregado = "ENTREGADO",
   Cancelado = "CANCELADO",
 }
 
 export const OrderStatusValues: OrderStatus[] = [
-  OrderStatus.Pendiente,
+  OrderStatus.Nuevo,
   OrderStatus.Confirmado,
   OrderStatus.Rechazado,
-  OrderStatus.EnProgreso,
+  OrderStatus.Progreso,
   OrderStatus.Entregado,
   OrderStatus.Cancelado,
 ];

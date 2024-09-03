@@ -33,11 +33,18 @@ import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
 import BlockIcon from "@mui/icons-material/Block";
 import AutorenewRoundedIcon from "@mui/icons-material/AutorenewRounded";
 import MoreHorizRoundedIcon from "@mui/icons-material/MoreHorizRounded";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+
 import OrderDetailsModal from "../order-details-modal";
 import { SortOrder } from "@/types";
 import { getComparator, stableSort } from "@/utils/stable-sort";
 import { TablePagination } from "@/components";
 import { MOCK_ORDERS } from "@/MOCK/mock-orders";
+import { OrderStatus, OrderStatusValues } from "@/types/enums";
+import { convertSnakeCaseToReadable } from "@/utils/convet-snake-case-to-readable";
+import { OrderStatusChip } from "./OrderStatusChip";
+import { OrderDto } from "./types";
+import { NewProductDB, ProductDB } from "@/db/schema";
 
 function RowMenu() {
   return (
@@ -58,7 +65,13 @@ function RowMenu() {
   );
 }
 
-export default function OrderTable({ orders }: { orders: typeof MOCK_ORDERS }) {
+export default function OrderTable({
+  orders,
+  avaialbleProducts,
+}: {
+  orders: OrderDto[];
+  avaialbleProducts: ProductDB[];
+}) {
   const [order, setOrder] = React.useState<SortOrder>("desc");
   const [open, setOpen] = React.useState(false);
   const [selectedOrder, setSelectedOrder] = React.useState<any | null>();
@@ -76,11 +89,11 @@ export default function OrderTable({ orders }: { orders: typeof MOCK_ORDERS }) {
           placeholder="Filtrar por status"
           slotProps={{ button: { sx: { whiteSpace: "nowrap" } } }}
         >
-          <Option value="paid">Pagado</Option>
-          <Option value="pending">Pendiente</Option>
-          <Option value="refunded">Confirmado</Option>
-          <Option value="refunded">Reparto</Option>
-          <Option value="cancelled">Cancelado</Option>
+          {OrderStatusValues.map((status) => (
+            <Option key={status} value={status}>
+              {convertSnakeCaseToReadable(status)}
+            </Option>
+          ))}
         </Select>
       </FormControl>
       <FormControl size="sm">
@@ -101,6 +114,8 @@ export default function OrderTable({ orders }: { orders: typeof MOCK_ORDERS }) {
   return (
     <React.Fragment>
       <OrderDetailsModal
+        viewMode={false}
+        availableProducts={avaialbleProducts}
         open={selectedOrder}
         onClose={() => setSelectedOrder(null)}
       />
@@ -214,6 +229,7 @@ export default function OrderTable({ orders }: { orders: typeof MOCK_ORDERS }) {
               </th>
               <th style={{ width: 140, padding: "12px 6px" }}>Fecha</th>
               <th style={{ width: 240, padding: "12px 6px" }}>Cliente</th>
+              <th style={{ width: 140, padding: "12px 6px" }}>Pagado</th>
               <th style={{ width: 140, padding: "12px 6px" }}>Status</th>
               <th style={{ width: 50 }}></th>
             </tr>
@@ -229,42 +245,44 @@ export default function OrderTable({ orders }: { orders: typeof MOCK_ORDERS }) {
                   <Typography level="body-xs">{row.id}</Typography>
                 </td>
                 <td>
-                  <Typography level="body-xs">{row.date}</Typography>
+                  <Typography level="body-xs">{row.deliveryDate}</Typography>
                 </td>
                 <td>
                   <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
-                    <Avatar size="sm">{row.customer.initial}</Avatar>
+                    <Avatar size="sm">{row.client.firstName?.charAt(0)}</Avatar>
                     <div>
                       <Typography level="body-xs">
-                        {row.customer.name}
+                        {row.client.firstName} {row.client.lastName}
                       </Typography>
                       <Typography level="body-xs">
-                        {row.customer.email}
+                        {row.client.email}
                       </Typography>
                     </div>
                   </Box>
                 </td>
                 <td>
-                  <Chip
-                    variant="soft"
-                    size="sm"
-                    startDecorator={
-                      {
-                        Paid: <CheckRoundedIcon />,
-                        Refunded: <AutorenewRoundedIcon />,
-                        Cancelled: <BlockIcon />,
-                      }[row.status]
-                    }
-                    color={
-                      {
-                        Paid: "success",
-                        Refunded: "neutral",
-                        Cancelled: "danger",
-                      }[row.status] as ColorPaletteProp
-                    }
-                  >
-                    {row.status}
-                  </Chip>
+                  {row.paid ? (
+                    <Chip
+                      variant="soft"
+                      size="sm"
+                      startDecorator={<CheckRoundedIcon />}
+                      color="success"
+                    >
+                      Pagado
+                    </Chip>
+                  ) : (
+                    <Chip
+                      variant="soft"
+                      size="sm"
+                      startDecorator={<AccessTimeIcon />}
+                      color="neutral"
+                    >
+                      Pendiente
+                    </Chip>
+                  )}
+                </td>
+                <td>
+                  <OrderStatusChip>{row.status as OrderStatus}</OrderStatusChip>
                 </td>
                 <td>{RowMenu()}</td>
               </tr>
