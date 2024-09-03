@@ -6,31 +6,25 @@ import {
   Box,
   Button,
   Checkbox,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Divider,
   FormControl,
   FormLabel,
   Input,
   Link,
-  Modal,
-  ModalDialog,
   Option,
   Sheet,
   Select,
   Table,
-  Typography
+  Typography,
+  IconButton,
+  Stack
 } from "@mui/joy";
 
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import DeleteForever from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
 import SearchIcon from "@mui/icons-material/Search";
-import WarningRoundedIcon from '@mui/icons-material/WarningRounded';
 
 import { ProductDB } from "@/db/schema";
-import { removeProductAction } from "../../eliminar/[id]/actions";
+import DeleteButton from "./delete-button";
 
 interface IProps {
   products: ProductDB[];
@@ -40,19 +34,6 @@ export default function ProductTable({ products }: IProps) {
   const [order, setOrder] = React.useState<"asc" | "desc">("desc");
   const [selected, setSelected] = React.useState<readonly string[]>([]);
   const [open, setOpen] = React.useState<boolean>(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
-  const confirmDelete = async () => {
-    try {
-      await removeProductAction(Number(selected[0]));
-    } catch (error) {
-
-    } finally {
-      setOpen(false);
-      console.log("Producto eliminado");
-    }
-  }
 
   const renderFilters = () => (
     <React.Fragment>
@@ -168,7 +149,7 @@ export default function ProductTable({ products }: IProps) {
               </th>
               <th style={{ width: 300, padding: "12px 6px" }}>Descripción</th>
               <th style={{ width: 150, padding: "12px 6px" }}>Precio Inicial</th>
-              <th style={{ width: 150, padding: "12px 6px" }}>Accion</th>
+              <th style={{ width: 150, padding: "12px 6px", textAlign: 'center' }}>Acción</th>
             </tr>
           </thead>
           <tbody>
@@ -214,44 +195,21 @@ export default function ProductTable({ products }: IProps) {
                   </Typography>
                 </td>
                 <td>
-                  <Link href={"./productos/editar/" + product.id}>
-                    <Button variant='soft' startDecorator={<EditIcon />}>Editar</Button>
-                  </Link>
-                  <Button
-                    variant="soft"
-                    color="danger"
-                    endDecorator={<DeleteForever />}
-                    onClick={() => setOpen(true)}>
-                    Eliminar
-                  </Button>
-                  <Modal open={open} onClose={handleClose}
-                    sx={
-                      {
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        backdropFilter: "blur(2px)",
-                      }
-                    }>
-                    <ModalDialog variant="outlined" role="alertdialog" layout="center">
-                      <DialogTitle>
-                        <WarningRoundedIcon />
-                        Confirmación
-                      </DialogTitle>
-                      <Divider />
-                      <DialogContent>
-                        ¿Estás seguro de que deseas eliminar este producto?
-                      </DialogContent>
-                      <DialogActions>
-                        <Button variant="solid" color="danger" onClick={confirmDelete}>
-                          Eliminar
-                        </Button>
-                        <Button variant="plain" color="neutral" onClick={handleClose}>
-                          Cancelar
-                        </Button>
-                      </DialogActions>
-                    </ModalDialog>
-                  </Modal>
+                  <Stack
+                    direction="row"
+                    spacing={1}
+                    sx={{
+                      justifyContent: "center",
+                      alignItems: "center"
+                    }}
+                  >
+                    <Link href={"./productos/editar/" + product.id}>
+                      <Button variant='outlined' startDecorator={<EditIcon />}>Editar</Button>
+                    </Link>
+                    <IconButton variant="soft" color="danger" onClick={() => setOpen(true)}>
+                      <DeleteButton productId={product.id} />
+                    </IconButton>
+                  </Stack>
                 </td>
               </tr>
             ))}
