@@ -1,7 +1,6 @@
 "use client";
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import * as React from "react";
-import { ColorPaletteProp } from "@mui/joy/styles";
 import Avatar from "@mui/joy/Avatar";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
@@ -18,8 +17,7 @@ import Select from "@mui/joy/Select";
 import Option from "@mui/joy/Option";
 import Table from "@mui/joy/Table";
 import Sheet from "@mui/joy/Sheet";
-import Checkbox from "@mui/joy/Checkbox";
-import IconButton, { iconButtonClasses } from "@mui/joy/IconButton";
+import IconButton from "@mui/joy/IconButton";
 import Typography from "@mui/joy/Typography";
 import Menu from "@mui/joy/Menu";
 import MenuButton from "@mui/joy/MenuButton";
@@ -30,40 +28,18 @@ import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import SearchIcon from "@mui/icons-material/Search";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
-import BlockIcon from "@mui/icons-material/Block";
-import AutorenewRoundedIcon from "@mui/icons-material/AutorenewRounded";
 import MoreHorizRoundedIcon from "@mui/icons-material/MoreHorizRounded";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
-import OrderDetailsModal from "../order-details-modal";
-import { SortOrder } from "@/types";
-import { getComparator, stableSort } from "@/utils/stable-sort";
+import { ProductDB } from "@/db/schema";
 import { TablePagination } from "@/components";
-import { MOCK_ORDERS } from "@/MOCK/mock-orders";
-import { OrderStatus, OrderStatusValues } from "@/types/enums";
+import { getComparator, stableSort } from "@/utils/stable-sort";
 import { convertSnakeCaseToReadable } from "@/utils/convet-snake-case-to-readable";
-import { OrderStatusChip } from "./OrderStatusChip";
+import { OrderStatus, OrderStatusValues } from "@/types/enums";
+import { SortOrder } from "@/types";
+import { OrderDetailsModal } from "../order-details-modal";
 import { OrderDto } from "./types";
-import { NewProductDB, ProductDB } from "@/db/schema";
-
-function RowMenu() {
-  return (
-    <Dropdown>
-      <MenuButton
-        slots={{ root: IconButton }}
-        slotProps={{ root: { variant: "plain", color: "neutral", size: "sm" } }}
-      >
-        <MoreHorizRoundedIcon />
-      </MenuButton>
-      <Menu size="sm" sx={{ minWidth: 140 }}>
-        {/* <MenuItem>Editar</MenuItem>
-        <MenuItem>Move</MenuItem>
-        <Divider /> */}
-        <MenuItem color="danger">Archivar</MenuItem>
-      </Menu>
-    </Dropdown>
-  );
-}
+import { OrderStatusChip } from "./OrderStatusChip";
 
 export default function OrderTable({
   orders,
@@ -284,7 +260,28 @@ export default function OrderTable({
                 <td>
                   <OrderStatusChip>{row.status as OrderStatus}</OrderStatusChip>
                 </td>
-                <td>{RowMenu()}</td>
+                <td>
+                  <Dropdown>
+                    <MenuButton
+                      slots={{ root: IconButton }}
+                      slotProps={{
+                        root: {
+                          variant: "plain",
+                          color: "neutral",
+                          size: "sm",
+                        },
+                      }}
+                    >
+                      <MoreHorizRoundedIcon />
+                    </MenuButton>
+                    <Menu size="sm" sx={{ minWidth: 140 }}>
+                      {/* <MenuItem>Editar</MenuItem>
+        <MenuItem>Move</MenuItem>
+        <Divider /> */}
+                      <MenuItem color="danger">Archivar</MenuItem>
+                    </Menu>
+                  </Dropdown>
+                </td>
               </tr>
             ))}
           </tbody>

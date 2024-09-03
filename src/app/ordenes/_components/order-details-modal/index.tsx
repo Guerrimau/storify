@@ -55,12 +55,12 @@ interface OrderModalProps {
   onClose: () => void;
 }
 
-export default function OrderDetailsModal({
+export const OrderDetailsModal = ({
   availableProducts,
   viewMode = false,
   open,
   onClose,
-}: OrderModalProps) {
+}: OrderModalProps) => {
   const [products, setProducts] = useState<Product[]>([]);
   const onProductChange = (index: number, field: keyof Product, value: any) => {
     const updatedProducts = products.map((product, i) => {
@@ -294,4 +294,4 @@ export default function OrderDetailsModal({
       </ModalDialog>
     </Modal>
   );
-}
+};
